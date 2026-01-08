@@ -1,24 +1,28 @@
 package subway.controller;
 
+import subway.domain.PathResult;
+import subway.service.PathService;
 import subway.view.InputView;
 import subway.view.OutputView;
 import subway.domain.SearchType;
 
 public class SubwayController {
-    private final InputView in;
-    private final OutputView out;
+    private final InputView inputView;
+    private final OutputView outputView;
+    private final PathService pathService;
 
-    public SubwayController(InputView in, OutputView out) {
-        this.in = in;
-        this.out = out;
+    public SubwayController(InputView inputView, OutputView outputView, PathService pathService) {
+        this.inputView = inputView;
+        this.outputView = outputView;
+        this.pathService = pathService;
     }
 
     public void run() {
         while (true) {
-            out.showMain();
-            out.askMainMenuChoice();
+            outputView.showMain();
+            outputView.askMainMenuChoice();
 
-            String choice = in.readLine().trim();
+            String choice = inputView.readLine();
 
             if (choice.equalsIgnoreCase("Q")) {
                 return;
@@ -32,43 +36,44 @@ public class SubwayController {
             handlePathSearchMenu();
             return;
         }
-        out.printError("메뉴를 다시 선택해주세요.");
+        outputView.printError("메뉴를 다시 선택해주세요.");
     }
 
     private void handlePathSearchMenu() {
         while (true) {
-            out.showSearchTypeMenu();
-            out.askSearchTypeChoice();
+            outputView.showSearchTypeMenu();
+            outputView.askSearchTypeChoice();
 
-            String typeChoice = in.readLine().trim();
+            String typeChoice = inputView.readLine();
 
             if (typeChoice.equalsIgnoreCase("B")) {
                 return;
             }
 
             if (typeChoice.equals("1") || typeChoice.equals("2")) {
-                SearchType searchType = SearchType.DISTANCE;
+                SearchType searchType = SearchType.from(typeChoice);
 
-                if (typeChoice.equals("2")) {
-                    searchType = SearchType.TIME;
-                }
+                outputView.askDeparture();
+                String departure = inputView.readLine().trim();
 
-                out.askDeparture();
-                String departure = in.readLine().trim();
-
-                out.askArrival();
-                String arrival = in.readLine().trim();
+                outputView.askArrival();
+                String arrival = inputView.readLine().trim();
 
                 if (departure.equals(arrival)) {
-                    out.printError("출발역과 도착역이 동일합니다.");
+                    outputView.printError("출발역과 도착역이 동일합니다.");
                     continue;
                 }
 
-                //TO Do: 임시 메세지는 나중에 수정
-                out.printError("임시 메세지 : " + departure + " " + arrival + " " + "(기준 " + searchType + ")");
+                try {
+                    PathResult result = pathService.findPath(departure, arrival, searchType);
+                    outputView.printPathResult(result);
+                } catch (IllegalArgumentException e) {
+                    outputView.printError(e.getMessage());
+                }
+
                 return;
             }
-            out.printError("경로 기준을 다시 선택해주세요.");
+            outputView.printError("경로 기준을 다시 선택해주세요.");
         }
     }
 }

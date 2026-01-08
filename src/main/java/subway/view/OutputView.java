@@ -1,6 +1,7 @@
 package subway.view;
 
 import java.util.List;
+import subway.domain.PathResult;
 
 public class OutputView {
 
@@ -45,16 +46,15 @@ public class OutputView {
         System.out.println();
     }
 
-    //TO DO: path result 만들고 돌아와서 나중에 수정
-    public void printPathResult(int totalDistanceKm, int totalTimeMin, List<String> stations) {
+    public void printPathResult(PathResult result) {
         System.out.println();
         System.out.println("## 조회 결과");
         System.out.println("[INFO] ---");
-        System.out.println("[INFO] 총 거리: " + totalDistanceKm + "km");
-        System.out.println("[INFO] 총 소요 시간: " + totalTimeMin + "분");
+        System.out.println("[INFO] 총 거리: " + result.getTotalDistance());
+        System.out.println("[INFO] 총 소요 시간: " + result.getTotalDuration());
         System.out.println("[INFO] ---");
 
-        for (String station : stations) {
+        for (String station : result.getStations()) {
             System.out.println("[INFO] " + station);
         }
         System.out.println();

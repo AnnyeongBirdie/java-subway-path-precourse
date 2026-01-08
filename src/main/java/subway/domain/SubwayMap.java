@@ -28,4 +28,17 @@ public class SubwayMap {
     public List<Section> getConnectedSections(Station station){
         return List.copyOf(adjacencyMap.getOrDefault(station, List.of()));
     }
+
+    public List<Section> getConnectedSectionsByName(String stationName) {
+        Station station = StationRepository.stations().stream()
+                .filter(s -> s.getName().equals(stationName))
+                .findFirst()
+                .orElse(null);
+
+        if (station == null) {
+            return List.of();
+        }
+        return getConnectedSections(station); // 기존 메서드 재사용
+    }
+
 }
