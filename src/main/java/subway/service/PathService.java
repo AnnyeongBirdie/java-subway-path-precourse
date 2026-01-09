@@ -135,7 +135,10 @@ public class PathService {
         return new Totals(distSum, durSum);
     }
 
+    private static final boolean DEBUG = false;
+
     private void log(String format, Object... args) {
+        if (!DEBUG) return;
         System.out.println("[DEBUG] " + String.format(format, args));
     }
 
