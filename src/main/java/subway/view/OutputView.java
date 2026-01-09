@@ -50,13 +50,14 @@ public class OutputView {
         System.out.println();
         System.out.println("## 조회 결과");
         System.out.println("[INFO] ---");
-        System.out.println("[INFO] 총 거리: " + result.getTotalDistance());
-        System.out.println("[INFO] 총 소요 시간: " + result.getTotalDuration());
-        System.out.println("[INFO] ---");
 
-        for (String station : result.getStations()) {
-            System.out.println("[INFO] " + station);
-        }
+        String path = String.join(" -> ", result.getStations());
+        System.out.println("[INFO] 경로: " + path);
+
+        System.out.println("[INFO] 총 거리: " + result.getTotalDistance() + "km");
+        System.out.println("[INFO] 총 소요 시간: " + result.getTotalDuration() + "분");
+
+        System.out.println("[INFO] ---");
         System.out.println();
     }
 }
